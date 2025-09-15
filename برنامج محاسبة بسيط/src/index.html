@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <title>مؤسسة هيا محمد الغامدي التجارية</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2920/2920257.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+
+<body dir="rtl">
+  <div class="container my-4">
+    <h2 class="text-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/2920/2920257.png" alt="محاسبة" style="width:48px;vertical-align:middle;margin-left:12px;filter:drop-shadow(0 2px 6px #1976d2);">
+      مؤسسة هيا محمد الغامدي التجارية
+    </h2>
+    <form id="entryForm" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">اسم الحساب</label>
+        <input type="text" class="form-control" id="account" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">الوصف</label>
+        <input type="text" class="form-control" id="description" required>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">مدين</label>
+        <input type="number" class="form-control" id="debit" step="0.01">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">دائن</label>
+        <input type="number" class="form-control" id="credit" step="0.01">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">تاريخ القيد</label>
+        <input type="date" class="form-control" id="entryDate" required>
+      </div>
+      <div class="col-12 text-end">
+        <button type="submit" class="btn btn-primary">إضافة القيد</button>
+      </div>
+    </form>
+
+    <hr>
+
+    <h4>دفتر اليومية</h4>
+    <table class="table table-bordered" id="journalTable">
+      <thead class="table-light">
+        <tr>
+          <th>التاريخ</th>
+          <th>اسم الحساب</th>
+          <th>الوصف</th>
+          <th>مدين</th>
+          <th>دائن</th>
+          <th>إجراء</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="text-end">
+      <strong>الإجمالي مدين: <span id="totalDebit">0.00</span></strong><br>
+      <strong>الإجمالي دائن: <span id="totalCredit">0.00</span></strong>
+    </div>
+  </div>
+
+  <script src="script.js"></script><!-- jsPDF + html2canvas -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- SheetJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+</body>
+
+</html>
+<div class="my-3 text-end">
+  <div class="d-flex justify-content-center flex-wrap gap-2">
+    <button class="btn btn-outline-secondary" onclick="exportPDF()">📄 طباعة PDF</button>
+    <button class="btn btn-outline-success" onclick="exportExcel()">📊 تصدير Excel</button>
+    <button class="btn btn-outline-primary" onclick="showIncomeStatement()">📈 قائمة الدخل</button>
+  </div>
+  <hr style="margin:18px 0;">
+</div>
+
+<!-- نافذة قائمة الدخل -->
+<div id="incomeStatement" style="display: none;">
+  <h5>قائمة الدخل</h5>
+  <p>الإيرادات: <span id="totalIncome">0.00</span> ج.م</p>
+  <p>المصروفات: <span id="totalExpense">0.00</span> ج.م</p>
+  <p><strong>صافي الربح / الخسارة: <span id="netProfit">0.00</span> ج.م</strong></p>
+</div>

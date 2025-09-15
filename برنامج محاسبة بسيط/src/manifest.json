@@ -1,0 +1,16 @@
+{
+  "short_name": "محاسبة",
+  "name": "مؤسسة هيا محمد الغامدي التجارية",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2920/2920257.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e0eafc",
+  "theme_color": "#1976d2",
+  "description": "برنامج محاسبة يعمل بدون إنترنت"
+}

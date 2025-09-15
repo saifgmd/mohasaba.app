@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  min-height: 100vh;
+  font-family: 'Cairo', Arial, sans-serif;
+}
+
+h2,
+h4 {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 2.2rem;
+  letter-spacing: 1px;
+}
+
+h4 {
+  margin-top: 32px;
+  font-weight: 600;
+}
+
+
+.container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+  margin-top: 32px;
+}
+
+form#entryForm .form-control {
+  border-radius: 10px;
+  border: 1px solid #b0bec5;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+}
+
+form#entryForm .btn-primary {
+  background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
+}
+
+.table {
+  background: #f5faff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.07);
+}
+
+.table th {
+  background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+}
+
+.table td {
+  border: none;
+  font-size: 1.05rem;
+}
+
+.btn-outline-secondary, .btn-outline-success, .btn-outline-primary {
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+
+.btn-danger {
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+#incomeStatement {
+  background: #e3f2fd;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.09);
+  padding: 18px 24px;
+  margin-top: 24px;
+  color: #1976d2;
+}
