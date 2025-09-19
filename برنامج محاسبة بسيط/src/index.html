@@ -16,6 +16,29 @@
       <img src="https://cdn-icons-png.flaticon.com/512/2920/2920257.png" alt="محاسبة" style="width:48px;vertical-align:middle;margin-left:12px;filter:drop-shadow(0 2px 6px #1976d2);">
       مؤسسة هيا محمد الغامدي التجارية
     </h2>
+
+    <!-- Digital Clock Component -->
+    <div class="digital-clock-container">
+      <div class="digital-clock">
+        <div class="clock-display">
+          <div class="time" id="clockTime">--:--:--</div>
+          <div class="date" id="clockDate">----/--/--</div>
+        </div>
+        <div class="timezone-selector">
+          <label for="timezoneSelect" class="form-label">المنطقة الزمنية:</label>
+          <select class="form-select" id="timezoneSelect">
+            <option value="Asia/Riyadh">الرياض (GMT+3)</option>
+            <option value="Europe/London">لندن (GMT+0)</option>
+            <option value="America/New_York">نيويورك (GMT-5)</option>
+            <option value="Asia/Tokyo">طوكيو (GMT+9)</option>
+            <option value="Australia/Sydney">سيدني (GMT+11)</option>
+            <option value="Europe/Paris">باريس (GMT+1)</option>
+            <option value="Asia/Dubai">دبي (GMT+4)</option>
+          </select>
+          <div class="timezone-name" id="timezoneName">الرياض</div>
+        </div>
+      </div>
+    </div>
     <form id="entryForm" class="row g-3">
       <div class="col-md-3">
         <label class="form-label">اسم الحساب</label>
@@ -63,10 +86,103 @@
       <strong>الإجمالي مدين: <span id="totalDebit">0.00</span></strong><br>
       <strong>الإجمالي دائن: <span id="totalCredit">0.00</span></strong>
     </div>
+
+    <div class="my-3 text-end">
+      <div class="d-flex justify-content-center flex-wrap gap-2">
+        <button class="btn btn-outline-secondary" onclick="exportPDF()">📄 طباعة PDF</button>
+        <button class="btn btn-outline-success" onclick="exportExcel()">📊 تصدير Excel</button>
+        <button class="btn btn-outline-primary" onclick="showIncomeStatement()">📈 قائمة الدخل</button>
+      </div>
+      <hr style="margin:18px 0;">
+    </div>
+
+    <!-- نافذة قائمة الدخل -->
+    <div id="incomeStatement" style="display: none;">
+      <h5>قائمة الدخل</h5>
+      <p>الإيرادات: <span id="totalIncome">0.00</span> ج.م</p>
+      <p>المصروفات: <span id="totalExpense">0.00</span> ج.م</p>
+      <p><strong>صافي الربح / الخسارة: <span id="netProfit">0.00</span> ج.م</strong></p>
+    </div>
   </div>
 
   <script src="script.js"></script><!-- jsPDF + html2canvas -->
   <script>
+    // Digital Clock initialization - inline to ensure it runs
+    function initDigitalClock() {
+      const timeElement = document.getElementById("clockTime");
+      const dateElement = document.getElementById("clockDate");
+      const timezoneSelect = document.getElementById("timezoneSelect");
+      const timezoneNameElement = document.getElementById("timezoneName");
+      
+      if (!timeElement || !dateElement || !timezoneSelect || !timezoneNameElement) {
+        return;
+      }
+      
+      const timezoneNames = {
+        'Asia/Riyadh': 'الرياض',
+        'Europe/London': 'لندن', 
+        'America/New_York': 'نيويورك',
+        'Asia/Tokyo': 'طوكيو',
+        'Australia/Sydney': 'سيدني',
+        'Europe/Paris': 'باريس',
+        'Asia/Dubai': 'دبي'
+      };
+      
+      function updateClock() {
+        try {
+          const selectedTimezone = timezoneSelect.value;
+          const now = new Date();
+          
+          const timeFormatter = new Intl.DateTimeFormat('ar-SA', {
+            timeZone: selectedTimezone,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          
+          const dateFormatter = new Intl.DateTimeFormat('ar-SA', {
+            timeZone: selectedTimezone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          });
+          
+          timeElement.textContent = timeFormatter.format(now);
+          dateElement.textContent = dateFormatter.format(now);
+          timezoneNameElement.textContent = timezoneNames[selectedTimezone] || selectedTimezone;
+          
+        } catch (error) {
+          timeElement.textContent = '--:--:--';
+          dateElement.textContent = '----/--/--';
+          timezoneNameElement.textContent = 'خطأ';
+        }
+      }
+      
+      // Load saved timezone
+      const savedTimezone = localStorage.getItem('selectedTimezone');
+      if (savedTimezone && timezoneSelect.querySelector(`option[value="${savedTimezone}"]`)) {
+        timezoneSelect.value = savedTimezone;
+      }
+      
+      // Event listener for timezone change
+      timezoneSelect.addEventListener('change', function() {
+        localStorage.setItem('selectedTimezone', this.value);
+        updateClock();
+      });
+      
+      // Start the clock
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDigitalClock);
+    } else {
+      initDigitalClock();
+    }
+    
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('service-worker.js');
@@ -82,19 +198,3 @@
 </body>
 
 </html>
-<div class="my-3 text-end">
-  <div class="d-flex justify-content-center flex-wrap gap-2">
-    <button class="btn btn-outline-secondary" onclick="exportPDF()">📄 طباعة PDF</button>
-    <button class="btn btn-outline-success" onclick="exportExcel()">📊 تصدير Excel</button>
-    <button class="btn btn-outline-primary" onclick="showIncomeStatement()">📈 قائمة الدخل</button>
-  </div>
-  <hr style="margin:18px 0;">
-</div>
-
-<!-- نافذة قائمة الدخل -->
-<div id="incomeStatement" style="display: none;">
-  <h5>قائمة الدخل</h5>
-  <p>الإيرادات: <span id="totalIncome">0.00</span> ج.م</p>
-  <p>المصروفات: <span id="totalExpense">0.00</span> ج.م</p>
-  <p><strong>صافي الربح / الخسارة: <span id="netProfit">0.00</span> ج.م</strong></p>
-</div>
